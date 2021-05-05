@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using DiscogsClient.Data.Parameters;
+using RestSharp;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -33,6 +34,10 @@ namespace DiscogsClient.Internal
         IRestRequest GetCommunityReleaseRatingRequest(int releaseId);
 
         IRestRequest GetUserIdentityRequest();
+
+        IRestRequest GetMarketplaceOrder(int orderId);
+
+        IRestRequest GetMarketplaceOrders(DiscogsMarketplaceOrdersParameters parameters = null);
 
         Task<T> Execute<T>(IRestRequest request, CancellationToken cancellationToken);
 

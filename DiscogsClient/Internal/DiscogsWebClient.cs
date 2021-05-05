@@ -3,6 +3,7 @@ using RestSharp;
 using System;
 using RestSharpHelper;
 using RestSharpHelper.OAuth1;
+using DiscogsClient.Data.Parameters;
 
 namespace DiscogsClient.Internal
 {
@@ -19,6 +20,7 @@ namespace DiscogsClient.Internal
         private const string _ReleaseRatingByUserUrl = "releases/{releaseId}/rating/{userName}";
         private const string _CommunityReleaseRatingUrl = "releases/{releaseId}/rating";
         private const string _IdendityUrl = "oauth/identity";
+        private const string _MarketplaceOrderUrl = "marketplace/orders/{orderId}";
         private readonly OAuthCompleteInformation _OAuthCompleteInformation;
         private readonly TokenAuthenticationInformation _TokenAuthenticationInformation;
 
@@ -128,6 +130,26 @@ namespace DiscogsClient.Internal
             var request = new RestRequest(url, method).AddHeader("Accept-Encoding", "gzip");
             if (_TokenAuthenticationInformation != null)
                 request.AddHeader("Authorization", _TokenAuthenticationInformation.GetDiscogsSecretToken());
+
+            return request;
+        }
+
+        public IRestRequest GetMarketplaceOrder(int orderId)
+        {
+            return GetRequest(_MarketplaceOrderUrl).AddUrlSegment(nameof(orderId), orderId.ToString());
+        }
+
+        public IRestRequest GetMarketplaceOrders(DiscogsMarketplaceOrdersParameters parameters = null)
+        {
+            IRestRequest request = GetRequest(_MarketplaceOrderUrl);
+
+            if(parameters != null)
+            {
+                foreach(var parameter in parameters.GetParameters())
+                {
+                    request.AddParameter(parameter.Key, parameter.Value, ParameterType.QueryString);
+                }
+            }
 
             return request;
         }

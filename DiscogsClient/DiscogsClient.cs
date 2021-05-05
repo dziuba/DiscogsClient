@@ -1,4 +1,5 @@
-﻿using DiscogsClient.Data.Query;
+﻿using DiscogsClient.Data.Parameters;
+using DiscogsClient.Data.Query;
 using DiscogsClient.Data.Result;
 using DiscogsClient.Internal;
 using RestSharp;
@@ -313,6 +314,28 @@ namespace DiscogsClient
         {
             var url = (type == DiscogsImageFormatType.Normal) ? image.uri : image.uri150;
             return await _Client.SaveFile(url, path, fileName, cancellationToken);
+        }
+
+        public Task<DiscogsOrder> GetOrderAsync(int orderId)
+        {
+            return GetOrderAsync(orderId, CancellationToken.None);
+        }
+
+        public async Task<DiscogsOrder> GetOrderAsync(int orderId, CancellationToken token)
+        {
+            var request = _Client.GetMarketplaceOrder(orderId);
+            return await _Client.Execute<DiscogsOrder>(request, token);
+        }
+
+        public Task<DiscogsOrders> GetOrdersAsync(DiscogsMarketplaceOrdersParameters parameters = null)
+        {
+            return GetOrdersAsync(CancellationToken.None, parameters);
+        }
+
+        public async Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, DiscogsMarketplaceOrdersParameters parameters = null)
+        {
+            var request = _Client.GetMarketplaceOrders(parameters);
+            return await _Client.Execute<DiscogsOrders>(request, token);
         }
     }
 }

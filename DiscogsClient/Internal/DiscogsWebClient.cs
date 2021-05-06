@@ -3,7 +3,6 @@ using RestSharp;
 using System;
 using RestSharpHelper;
 using RestSharpHelper.OAuth1;
-using DiscogsClient.Data.Parameters;
 
 namespace DiscogsClient.Internal
 {
@@ -139,19 +138,9 @@ namespace DiscogsClient.Internal
             return GetRequest(_MarketplaceOrderUrl).AddUrlSegment(nameof(orderId), orderId.ToString());
         }
 
-        public IRestRequest GetMarketplaceOrders(DiscogsMarketplaceOrdersParameters parameters = null)
+        public IRestRequest GetMarketplaceOrders()
         {
-            IRestRequest request = GetRequest(_MarketplaceOrderUrl);
-
-            if(parameters != null)
-            {
-                foreach(var parameter in parameters.GetParameters())
-                {
-                    request.AddParameter(parameter.Key, parameter.Value, ParameterType.QueryString);
-                }
-            }
-
-            return request;
+            return GetRequest(_MarketplaceOrderUrl);
         }
     }
 }

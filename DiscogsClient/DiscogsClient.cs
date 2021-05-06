@@ -1,9 +1,7 @@
-﻿using DiscogsClient.Data.Parameters;
-using DiscogsClient.Data.Query;
+﻿using DiscogsClient.Data.Query;
 using DiscogsClient.Data.Result;
 using DiscogsClient.Internal;
 using RestSharp;
-using RestSharpHelper;
 using RestSharpHelper.OAuth1;
 using System;
 using System.Collections.Generic;
@@ -327,14 +325,18 @@ namespace DiscogsClient
             return await _Client.Execute<DiscogsOrder>(request, token);
         }
 
-        public Task<DiscogsOrders> GetOrdersAsync(DiscogsMarketplaceOrdersParameters parameters = null)
+        public Task<DiscogsOrders> GetOrdersAsync(DiscogsOrdersFilter filter = null)
         {
-            return GetOrdersAsync(CancellationToken.None, parameters);
+            return GetOrdersAsync(CancellationToken.None, filter);
         }
 
-        public async Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, DiscogsMarketplaceOrdersParameters parameters = null)
+        public async Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, DiscogsOrdersFilter filter = null)
         {
-            var request = _Client.GetMarketplaceOrders(parameters);
+            var request = _Client.GetMarketplaceOrders();
+
+            if(filter != null)
+                request.AddAsParameter(filter);
+
             return await _Client.Execute<DiscogsOrders>(request, token);
         }
     }

@@ -38,6 +38,10 @@ namespace DiscogsClient.Internal
 
         IRestRequest GetMarketplaceOrders();
 
+        IRestRequest PostMarketplaceNewListing();
+
+        IRestRequest DeleteMarketplaceListing(int listingId);
+
         Task<T> Execute<T>(IRestRequest request, CancellationToken cancellationToken);
 
         Task<HttpStatusCode> Execute(IRestRequest request, CancellationToken cancellationToken);

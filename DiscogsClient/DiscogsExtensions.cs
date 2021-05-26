@@ -39,10 +39,13 @@ namespace DiscogsClient
         /// <param name="parameter"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IRestRequest AddAsParameter(this IRestRequest request, object parameter, ParameterType type = ParameterType.QueryString)
+        public static IRestRequest AddAsParameter(this IRestRequest request, object parameter, ParameterType type = ParameterType.QueryString, IFormatProvider[] providers = null)
         {
             if (parameter == null)
                 return request;
+
+            if (providers == null)
+                providers = DiscogsClientConfiguration.RestParameterFormatProviders;
 
             foreach (var property in parameter.GetType().GetProperties())
             {
@@ -55,16 +58,32 @@ namespace DiscogsClient
                 if (desc.Length > 0)
                     key = ((DescriptionAttribute)desc[0]).Description;
 
-                if (value.GetType().IsEnum)
-                {
-                    var description = ((Enum)value).GetDescription();
-                    if (description.Length > 0)
-                        value = description;
-                }              
+                if (providers != null)
+                    value = providers.FormatData(value);          
 
                 request.AddParameter(key, value, type);
             }
             return request;
+        }
+
+        /// <summary>
+        /// Formats data with supplied providers
+        /// </summary>
+        /// <param name="providers"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static object FormatData(this IFormatProvider[] providers, object element)
+        {
+            foreach (var provider in providers)
+            {
+                try
+                {
+                    return string.Format(provider, "{0}", element);
+                }
+                catch (FormatException) { }
+            }
+
+            return element;
         }
     }
 }

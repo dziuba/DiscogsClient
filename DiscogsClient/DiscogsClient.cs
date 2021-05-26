@@ -339,5 +339,32 @@ namespace DiscogsClient
 
             return await _Client.Execute<DiscogsOrders>(request, token);
         }
+
+        public Task<DiscogsNewListing> PostNewListingAsync(DiscogsNewListingQuery query)
+        {
+            return PostNewListingAsync(CancellationToken.None, query);
+        }
+
+        public async Task<DiscogsNewListing> PostNewListingAsync(CancellationToken token, DiscogsNewListingQuery query)
+        {
+            var request = _Client.PostMarketplaceNewListing();
+
+            if (query != null)
+                request.AddAsParameter(query);
+
+            return await _Client.Execute<DiscogsNewListing>(request, token);
+        }
+
+        public Task<HttpStatusCode> DeleteListingAsync(int listingId)
+        {
+            return DeleteListingAsync(listingId);
+        }
+
+        public async Task<HttpStatusCode> DeleteListingAsync(CancellationToken token, int listingId)
+        {
+            var request = _Client.DeleteMarketplaceListing(listingId);
+
+            return await _Client.Execute(request, token);
+        }
     }
 }

@@ -42,6 +42,8 @@ namespace DiscogsClient.Internal
 
         IRestRequest DeleteMarketplaceListing(int listingId);
 
+        IRestRequest GetUserInventory(string username);
+
         Task<T> Execute<T>(IRestRequest request, CancellationToken cancellationToken);
 
         Task<HttpStatusCode> Execute(IRestRequest request, CancellationToken cancellationToken);

@@ -20,6 +20,7 @@ namespace DiscogsClient.Internal
         private const string _CommunityReleaseRatingUrl = "releases/{releaseId}/rating";
         private const string _IdendityUrl = "oauth/identity";
         private const string _MarketplaceOrderUrl = "marketplace/orders/{orderId}";
+        private const string _UserInventoryUrl = "users/{username}/inventory";
         private const string _MarketplaceListingsUrl = "marketplace/listings";
         private const string _MarketplaceListingUrl = "marketplace/listings/{listingId}";
         private readonly OAuthCompleteInformation _OAuthCompleteInformation;
@@ -153,6 +154,11 @@ namespace DiscogsClient.Internal
         public IRestRequest DeleteMarketplaceListing(int listingId)
         {
             return GetRequest(_MarketplaceListingUrl, Method.DELETE).AddUrlSegment(nameof(listingId), listingId.ToString());
+        }
+
+        public IRestRequest GetUserInventory(string username)
+        {
+            return GetRequest(_UserInventoryUrl, Method.POST).AddUrlSegment(nameof(username), username);
         }
     }
 }

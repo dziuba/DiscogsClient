@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DiscogsClient
 {
-    public class DiscogsClient : IDiscogsDataBaseClient, IDiscogsUserIdentityClient
+    public class DiscogsClient : IDiscogsDataBaseClient, IDiscogsUserIdentityClient, IDiscogsMarketplaceClient
     {
         private readonly IDiscogsWebClient _Client;
         private DiscogsIdentity _DiscogsIdentity;
@@ -316,10 +316,10 @@ namespace DiscogsClient
 
         public Task<DiscogsOrder> GetOrderAsync(int orderId)
         {
-            return GetOrderAsync(orderId, CancellationToken.None);
+            return GetOrderAsync(CancellationToken.None, orderId);
         }
 
-        public async Task<DiscogsOrder> GetOrderAsync(int orderId, CancellationToken token)
+        public async Task<DiscogsOrder> GetOrderAsync(CancellationToken token, int orderId)
         {
             var request = _Client.GetMarketplaceOrder(orderId);
             return await _Client.Execute<DiscogsOrder>(request, token);
@@ -365,6 +365,21 @@ namespace DiscogsClient
             var request = _Client.DeleteMarketplaceListing(listingId);
 
             return await _Client.Execute(request, token);
+        }
+
+        public Task<DiscogsInventory> GetUsersInventoryAsync(string username, DiscogsInventoryQuery query)
+        {
+            return GetUsersInventoryAsync(CancellationToken.None, username, query);
+        }
+
+        public async Task<DiscogsInventory> GetUsersInventoryAsync(CancellationToken token, string username, DiscogsInventoryQuery query)
+        {
+            var request = _Client.GetUserInventory(username);
+
+            if (query != null)
+                request.AddAsParameter(query);
+
+            return await _Client.Execute<DiscogsInventory>(request, token);
         }
     }
 }

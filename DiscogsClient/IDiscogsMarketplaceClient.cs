@@ -37,11 +37,15 @@ namespace DiscogsClient
 
         Task<DiscogsInventory> GetUsersInventoryAsync(CancellationToken token, string username, DiscogsInventoryQuery query);
 
+        // Price Suggestion
+
+        Task<DiscogsPriceSuggestion> GetPriceSuggestion(int releaseId);
+
+        Task<DiscogsPriceSuggestion> GetPriceSuggestion(CancellationToken token, int releaseId);
+
         // edit order
-        // edit listing - price update, quantity update
         // orders messages
         // fee
-        // price sugestions
         // statistic
     }
 }

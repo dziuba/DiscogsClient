@@ -44,6 +44,8 @@ namespace DiscogsClient.Internal
 
         IRestRequest GetUserInventory(string username);
 
+        IRestRequest GetPriceSuggestion(int releaseId);
+
         Task<T> Execute<T>(IRestRequest request, CancellationToken cancellationToken);
 
         Task<HttpStatusCode> Execute(IRestRequest request, CancellationToken cancellationToken);

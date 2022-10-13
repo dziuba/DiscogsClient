@@ -1,6 +1,6 @@
 ﻿using DiscogsClient.Data.Result;
 
-namespace DiscogsClient.Data.Query 
+namespace DiscogsClient.Data.Query
 {
     public class DiscogsSortInformation 
     {

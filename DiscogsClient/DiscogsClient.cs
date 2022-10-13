@@ -381,5 +381,17 @@ namespace DiscogsClient
 
             return await _Client.Execute<DiscogsInventory>(request, token);
         }
+
+        public Task<DiscogsPriceSuggestion> GetPriceSuggestion(int releaseId)
+        {
+            return GetPriceSuggestion(CancellationToken.None, releaseId);
+        }
+
+        public async Task<DiscogsPriceSuggestion> GetPriceSuggestion(CancellationToken token, int releaseId)
+        {
+            var request = _Client.GetPriceSuggestion(releaseId);
+
+            return await _Client.Execute<DiscogsPriceSuggestion>(request, token);
+        }
     }
 }

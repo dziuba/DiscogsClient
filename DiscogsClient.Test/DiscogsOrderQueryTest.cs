@@ -1,4 +1,5 @@
-﻿using DiscogsClient.Data.Query;
+﻿using DiscogsClient.Data;
+using DiscogsClient.Data.Query;
 using DiscogsClient.Data.Result;
 using FluentAssertions;
 using Newtonsoft.Json;

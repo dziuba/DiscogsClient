@@ -23,6 +23,7 @@ namespace DiscogsClient.Internal
         private const string _UserInventoryUrl = "users/{username}/inventory";
         private const string _MarketplaceListingsUrl = "marketplace/listings";
         private const string _MarketplaceListingUrl = "marketplace/listings/{listingId}";
+        private const string _MarketplacePriceSuggestionUrl = "marketplace/price_suggestions/{releaseId}";
         private readonly OAuthCompleteInformation _OAuthCompleteInformation;
         private readonly TokenAuthenticationInformation _TokenAuthenticationInformation;
 
@@ -159,6 +160,11 @@ namespace DiscogsClient.Internal
         public IRestRequest GetUserInventory(string username)
         {
             return GetRequest(_UserInventoryUrl, Method.POST).AddUrlSegment(nameof(username), username);
+        }
+
+        public IRestRequest GetPriceSuggestion(int releaseId)
+        {
+            return GetRequest(_MarketplacePriceSuggestionUrl, Method.GET).AddUrlSegment(nameof(releaseId), releaseId.ToString());
         }
     }
 }

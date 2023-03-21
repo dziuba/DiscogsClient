@@ -27,9 +27,13 @@ namespace DiscogsClient
 
         Task<DiscogsNewListing> PostNewListingAsync(CancellationToken token, DiscogsNewListingQuery query);
 
-        Task<HttpStatusCode> DeleteListingAsync(int listingId);
+        Task<HttpStatusCode> PostListingAsync(long listingId, DiscogsNewListingQuery query);
 
-        Task<HttpStatusCode> DeleteListingAsync(CancellationToken token, int listingId);
+        Task<HttpStatusCode> PostListingAsync(CancellationToken token, long listingId, DiscogsNewListingQuery query);
+
+        Task<HttpStatusCode> DeleteListingAsync(long listingId);
+
+        Task<HttpStatusCode> DeleteListingAsync(CancellationToken token, long listingId);
 
         // Inventory
 

@@ -7,6 +7,6 @@ namespace DiscogsClient.Data.Result
     public class DiscogsOrderTotal
     {
         public string currency { get; set; }
-        public int value { get; set; }
+        public double value { get; set; }
     }
 }

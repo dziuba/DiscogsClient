@@ -8,6 +8,6 @@ namespace DiscogsClient.Data.Result
     {
         public string currency { get; set; }
         public string method { get; set; }
-        public int value { get; set; }
+        public double value { get; set; }
     }
 }

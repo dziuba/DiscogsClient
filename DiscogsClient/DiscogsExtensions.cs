@@ -1,5 +1,8 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -84,6 +87,25 @@ namespace DiscogsClient
             }
 
             return element;
+        }
+
+        /// <summary>
+        /// Serialize object to json (Newtonsoft) and add it to request's body
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IRestRequest SerializeToJsonBody(this IRestRequest request, object obj)
+        {
+            if (obj == null)
+                return request;
+
+            //var converter = new StringEnumConverter();
+            string json = JsonConvert.SerializeObject(obj);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody); 
+            
+            return request;
         }
     }
 }

@@ -149,10 +149,21 @@ namespace DiscogsClient.Internal
 
         public IRestRequest PostMarketplaceNewListing()
         {
-            return GetRequest(_MarketplaceListingsUrl, Method.POST);
+            IRestRequest request = GetRequest(_MarketplaceListingsUrl, Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+
+            return request;
         }
 
-        public IRestRequest DeleteMarketplaceListing(int listingId)
+        public IRestRequest PostMarketplaceListing(long listingId)
+        {
+            IRestRequest request = GetRequest(_MarketplaceListingUrl, Method.POST).AddUrlSegment(nameof(listingId), listingId.ToString());
+            request.AddHeader("Content-Type", "application/json");
+
+            return request;
+        }
+
+        public IRestRequest DeleteMarketplaceListing(long listingId)
         {
             return GetRequest(_MarketplaceListingUrl, Method.DELETE).AddUrlSegment(nameof(listingId), listingId.ToString());
         }

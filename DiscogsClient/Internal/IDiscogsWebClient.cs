@@ -40,7 +40,9 @@ namespace DiscogsClient.Internal
 
         IRestRequest PostMarketplaceNewListing();
 
-        IRestRequest DeleteMarketplaceListing(int listingId);
+        IRestRequest PostMarketplaceListing(long listingId);
+
+        IRestRequest DeleteMarketplaceListing(long listingId);
 
         IRestRequest GetUserInventory(string username);
 

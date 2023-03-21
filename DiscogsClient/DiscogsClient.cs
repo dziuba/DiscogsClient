@@ -1,6 +1,8 @@
 ﻿using DiscogsClient.Data.Query;
 using DiscogsClient.Data.Result;
 using DiscogsClient.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharpHelper.OAuth1;
 using System;
@@ -350,17 +352,34 @@ namespace DiscogsClient
             var request = _Client.PostMarketplaceNewListing();
 
             if (query != null)
-                request.AddAsParameter(query);
+                request.SerializeToJsonBody(query);
 
-            return await _Client.Execute<DiscogsNewListing>(request, token);
+            var response = await _Client.Execute<JObject>(request, token);
+
+            return response.ToObject<DiscogsNewListing>(); //await _Client.Execute<DiscogsNewListing>(request, token);
         }
 
-        public Task<HttpStatusCode> DeleteListingAsync(int listingId)
+        public Task<HttpStatusCode> PostListingAsync(long listingId, DiscogsNewListingQuery query)
         {
-            return DeleteListingAsync(listingId);
+            return PostListingAsync(CancellationToken.None, listingId, query);
         }
 
-        public async Task<HttpStatusCode> DeleteListingAsync(CancellationToken token, int listingId)
+        public async Task<HttpStatusCode> PostListingAsync(CancellationToken token, long listingId, DiscogsNewListingQuery query)
+        {
+            var request = _Client.PostMarketplaceListing(listingId);
+
+            if (query != null)
+                request.SerializeToJsonBody(query);
+
+            return await _Client.Execute(request, token);
+        }
+
+        public Task<HttpStatusCode> DeleteListingAsync(long listingId)
+        {
+            return DeleteListingAsync(CancellationToken.None, listingId);
+        }
+
+        public async Task<HttpStatusCode> DeleteListingAsync(CancellationToken token, long listingId)
         {
             var request = _Client.DeleteMarketplaceListing(listingId);
 

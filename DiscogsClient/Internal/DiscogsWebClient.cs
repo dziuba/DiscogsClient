@@ -20,6 +20,7 @@ namespace DiscogsClient.Internal
         private const string _CommunityReleaseRatingUrl = "releases/{releaseId}/rating";
         private const string _IdendityUrl = "oauth/identity";
         private const string _MarketplaceOrderUrl = "marketplace/orders/{orderId}";
+        private const string _MarketplaceOrdersUrl = "marketplace/orders";
         private const string _UserInventoryUrl = "users/{username}/inventory";
         private const string _MarketplaceListingsUrl = "marketplace/listings";
         private const string _MarketplaceListingUrl = "marketplace/listings/{listingId}";
@@ -47,88 +48,89 @@ namespace DiscogsClient.Internal
 
         static DiscogsWebClient()
         {
-            SharedTimeLimiter = TimeLimiter.GetFromMaxCountByInterval(60, TimeSpan.FromMinutes(1));
+            SharedTimeLimiter = TimeLimiter.GetFromMaxCountByInterval(25, TimeSpan.FromMinutes(1));
         }
 
         protected override IRestClient Mature(IRestClient client) 
         {
-            client.Authenticator = _OAuthCompleteInformation?.GetAuthenticatorForProtectedResource();
+            Authenticator = _OAuthCompleteInformation?.GetAuthenticatorForProtectedResource();
+
             return client;
         }
 
-        public IRestRequest GetUserIdentityRequest()
+        public RestRequest GetUserIdentityRequest()
         {
             return GetRequest(_IdendityUrl);
         }
 
-        public IRestRequest GetSearchRequest()
+        public RestRequest GetSearchRequest()
         {
             return GetRequest(_SearchUrl);
         }
 
-        public IRestRequest GetReleaseRequest(int releaseId)
+        public RestRequest GetReleaseRequest(int releaseId)
         {       
             return GetRequest(_ReleaseUrl).AddUrlSegment(nameof(releaseId), releaseId.ToString());
         }
 
-        public IRestRequest GetMasterRequest(int masterId) 
+        public RestRequest GetMasterRequest(int masterId) 
         {
             return GetRequest(_MasterUrl).AddUrlSegment(nameof(masterId), masterId.ToString());
         }
 
-        public IRestRequest GetMasterReleaseVersionRequest(int masterId)
+        public RestRequest GetMasterReleaseVersionRequest(int masterId)
         {
             return GetRequest(_MasterReleaseVersionUrl).AddUrlSegment(nameof(masterId), masterId.ToString());
         }
 
-        public IRestRequest GetArtistRequest(int artistId) 
+        public RestRequest GetArtistRequest(int artistId) 
         {
             return GetRequest(_ArtistUrl).AddUrlSegment(nameof(artistId), artistId.ToString());
         }
 
-        public IRestRequest GetLabelRequest(int labelId) 
+        public RestRequest GetLabelRequest(int labelId) 
         {
             return GetRequest(_LabeltUrl).AddUrlSegment(nameof(labelId), labelId.ToString());
         }
 
-        public IRestRequest GetArtistReleaseVersionRequest(int artistId) 
+        public RestRequest GetArtistReleaseVersionRequest(int artistId) 
         {
             return GetRequest(_ArtistReleaseUrl).AddUrlSegment(nameof(artistId), artistId.ToString());
         }
 
-        public IRestRequest GetAllLabelReleasesRequest(int labelId)
+        public RestRequest GetAllLabelReleasesRequest(int labelId)
         {
             return GetRequest(_AllLabelReleasesUrl).AddUrlSegment(nameof(labelId), labelId.ToString());
         }
 
-        public IRestRequest GetGetUserReleaseRatingRequest(string userName, int releaseId)
+        public RestRequest GetGetUserReleaseRatingRequest(string userName, int releaseId)
         {
-            return GetUserReleaseRatingRequestRaw(userName, releaseId, Method.GET);
+            return GetUserReleaseRatingRequestRaw(userName, releaseId, Method.Get);
         }
 
-        public IRestRequest GetPutUserReleaseRatingRequest(string userName, int releaseId)
+        public RestRequest GetPutUserReleaseRatingRequest(string userName, int releaseId)
         {
-            return GetUserReleaseRatingRequestRaw(userName, releaseId, Method.PUT);
+            return GetUserReleaseRatingRequestRaw(userName, releaseId, Method.Put);
         }
 
-        public IRestRequest GetDeleteUserReleaseRatingRequest(string userName, int releaseId)
+        public RestRequest GetDeleteUserReleaseRatingRequest(string userName, int releaseId)
         {
-            return GetUserReleaseRatingRequestRaw(userName, releaseId, Method.DELETE);
+            return GetUserReleaseRatingRequestRaw(userName, releaseId, Method.Delete);
         }
 
-        private IRestRequest GetUserReleaseRatingRequestRaw(string userName, int releaseId, Method method)
+        private RestRequest GetUserReleaseRatingRequestRaw(string userName, int releaseId, Method method)
         {
             return GetRequest(_ReleaseRatingByUserUrl, method)
                        .AddUrlSegment(nameof(userName), userName)
                        .AddUrlSegment(nameof(releaseId), releaseId.ToString());
         }
 
-        public IRestRequest GetCommunityReleaseRatingRequest(int releaseId)
+        public RestRequest GetCommunityReleaseRatingRequest(int releaseId)
         {
             return GetRequest(_CommunityReleaseRatingUrl).AddUrlSegment(nameof(releaseId), releaseId.ToString());
         }
 
-        private IRestRequest GetRequest(string url, Method method = Method.GET)
+        private RestRequest GetRequest(string url, Method method = Method.Get)
         {
             var request = new RestRequest(url, method).AddHeader("Accept-Encoding", "gzip");
             if (_TokenAuthenticationInformation != null)
@@ -137,45 +139,51 @@ namespace DiscogsClient.Internal
             return request;
         }
 
-        public IRestRequest GetMarketplaceOrder(int orderId)
+        public RestRequest GetMarketplaceOrder(int orderId)
         {
             return GetRequest(_MarketplaceOrderUrl).AddUrlSegment(nameof(orderId), orderId.ToString());
         }
 
-        public IRestRequest GetMarketplaceOrders()
+        public RestRequest GetMarketplaceOrders()
         {
-            return GetRequest(_MarketplaceOrderUrl);
-        }
-
-        public IRestRequest PostMarketplaceNewListing()
-        {
-            IRestRequest request = GetRequest(_MarketplaceListingsUrl, Method.POST);
+            var request = GetRequest(_MarketplaceOrdersUrl);
             request.AddHeader("Content-Type", "application/json");
 
             return request;
         }
 
-        public IRestRequest PostMarketplaceListing(long listingId)
+        public RestRequest PostMarketplaceNewListing()
         {
-            IRestRequest request = GetRequest(_MarketplaceListingUrl, Method.POST).AddUrlSegment(nameof(listingId), listingId.ToString());
+            RestRequest request = GetRequest(_MarketplaceListingsUrl, Method.Post);
             request.AddHeader("Content-Type", "application/json");
 
             return request;
         }
 
-        public IRestRequest DeleteMarketplaceListing(long listingId)
+        public RestRequest PostMarketplaceListing(long listingId)
         {
-            return GetRequest(_MarketplaceListingUrl, Method.DELETE).AddUrlSegment(nameof(listingId), listingId.ToString());
+            RestRequest request = GetRequest(_MarketplaceListingUrl, Method.Post).AddUrlSegment(nameof(listingId), listingId.ToString());
+            request.AddHeader("Content-Type", "application/json");
+
+            return request;
         }
 
-        public IRestRequest GetUserInventory(string username)
+        public RestRequest DeleteMarketplaceListing(long listingId)
         {
-            return GetRequest(_UserInventoryUrl, Method.POST).AddUrlSegment(nameof(username), username);
+            RestRequest request = GetRequest(_MarketplaceListingUrl, Method.Delete).AddUrlSegment(nameof(listingId), listingId.ToString());
+            request.AddHeader("Content-Type", "application/json");
+
+            return request;
         }
 
-        public IRestRequest GetPriceSuggestion(int releaseId)
+        public RestRequest GetUserInventory(string username)
         {
-            return GetRequest(_MarketplacePriceSuggestionUrl, Method.GET).AddUrlSegment(nameof(releaseId), releaseId.ToString());
+            return GetRequest(_UserInventoryUrl, Method.Post).AddUrlSegment(nameof(username), username);
+        }
+
+        public RestRequest GetPriceSuggestion(int releaseId)
+        {
+            return GetRequest(_MarketplacePriceSuggestionUrl, Method.Get).AddUrlSegment(nameof(releaseId), releaseId.ToString());
         }
     }
 }

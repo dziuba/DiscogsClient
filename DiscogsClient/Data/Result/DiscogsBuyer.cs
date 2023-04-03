@@ -8,5 +8,6 @@ namespace DiscogsClient.Data.Result
     {
         public string resource_url { get; set; }
         public string username { get; set; }
+        public string email { get; set; }
     }
 }

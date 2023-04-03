@@ -42,7 +42,7 @@ namespace DiscogsClient
         /// <param name="parameter"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IRestRequest AddAsParameter(this IRestRequest request, object parameter, ParameterType type = ParameterType.QueryString, IFormatProvider[] providers = null)
+        public static RestRequest AddAsParameter(this RestRequest request, object parameter, ParameterType type = ParameterType.QueryString, IFormatProvider[] providers = null)
         {
             if (parameter == null)
                 return request;
@@ -95,7 +95,7 @@ namespace DiscogsClient
         /// <param name="request"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static IRestRequest SerializeToJsonBody(this IRestRequest request, object obj)
+        public static RestRequest SerializeToJsonBody(this RestRequest request, object obj)
         {
             if (obj == null)
                 return request;

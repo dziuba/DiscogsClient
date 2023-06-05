@@ -327,17 +327,20 @@ namespace DiscogsClient
             return await _Client.Execute<DiscogsOrder>(request, token);
         }
 
-        public Task<DiscogsOrders> GetOrdersAsync(DiscogsOrdersFilter filter = null)
+        public Task<DiscogsOrders> GetOrdersAsync(int page = 1, int perPage = 50, DiscogsOrdersFilter filter = null)
         {
-            return GetOrdersAsync(CancellationToken.None, filter);
+            return GetOrdersAsync(CancellationToken.None, page, perPage, filter);
         }
 
-        public async Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, DiscogsOrdersFilter filter = null)
+        public async Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, int page = 1, int perPage = 50, DiscogsOrdersFilter filter = null)
         {
             var request = _Client.GetMarketplaceOrders();
 
             if(filter != null)
                 request.AddAsParameter(filter);
+
+            request.AddParameter("page", page, ParameterType.QueryString);
+            request.AddParameter("per_page", perPage, ParameterType.QueryString);
 
             return await _Client.Execute<DiscogsOrders>(request, token);
         }

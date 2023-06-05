@@ -17,9 +17,9 @@ namespace DiscogsClient
 
         Task<DiscogsOrder> GetOrderAsync(CancellationToken token, int orderId);
 
-        Task<DiscogsOrders> GetOrdersAsync(DiscogsOrdersFilter filter = null);
+        Task<DiscogsOrders> GetOrdersAsync(int page = 1, int perPage = 1, DiscogsOrdersFilter filter = null);
 
-        Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, DiscogsOrdersFilter filter = null);
+        Task<DiscogsOrders> GetOrdersAsync(CancellationToken token, int page = 1, int perPage = 1, DiscogsOrdersFilter filter = null);
 
         // Listings
 
